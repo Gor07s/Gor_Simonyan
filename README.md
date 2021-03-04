@@ -1,1 +1,0 @@
-# Gor_Simonyan
