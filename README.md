@@ -1,2 +1,1 @@
 # Gor_Simonyan
-ad
