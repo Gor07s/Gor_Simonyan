@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.form{
+  display: block;
+}
+
+#gen_box{
+  width: 300px;
+  margin-inline: auto;
+  margin-top: 200px;
+}
+
+.gen_but{
+  width: 100px;
+  margin-bottom: 20px;
+  margin-left: 100px;
+  height: 30px;
+  display: block;
+  background-color: red;
+}
+
+#addBox{
+  width: 300px;
+  margin-inline: auto;
+  margin-top: 200px;
+}
+
+#back{
+  margin: 20px;
+}
+
+.form{
+  display: block;
+}
