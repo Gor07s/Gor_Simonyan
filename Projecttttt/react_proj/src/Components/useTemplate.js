@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import SendTemplate from "./sendTemplate";
 
 class UseTemplate extends Component{
     constructor(props) {
@@ -9,12 +10,13 @@ class UseTemplate extends Component{
             apiResponseVars:"",
             myTempIsClick: false,
             tempClicked: false,
-            text: "",
             templateId: null,
             send: false,
-            variables: {}
+            template: {},
+            recipientsForSend: [],
+            varsForSend: [],
+            show: false
         }
-        this.txt = ""
         this.wordsForCheck = []
         this.arr = []
         this.words = []
@@ -24,9 +26,6 @@ class UseTemplate extends Component{
         this.showMyTemps = this.showMyTemps.bind(this)
         this.templateOnClick = this.templateOnClick.bind(this)
         this.UseTemplateFunc = this.UseTemplateFunc.bind(this)
-        this.sendMail = this.sendMail.bind(this)
-        this.textGenerator = this.textGenerator.bind(this)
-        this.wordFinder = this.wordFinder.bind(this)
     }
 
     templateOnClick(id){
@@ -128,130 +127,16 @@ class UseTemplate extends Component{
                             templateId: null})
     }
 
-    wordFinder(word){
-        let start = null
-        let st = 0
-        if(word.includes("{") && word.includes("}")) {
-            for (let i = 0; i < word.length; i++) {
-                if (word[0] !== "{"){
-                    this.wordsForCheck.forEach(element => this.arr.push(this.state.variables[element]))
-                    this.wordsForCheck = []
-                }
-                if (word[i] === "{") {
-                    start = i
-                    if (st !== null){
-                        this.arr.push(word.replace(word.slice(i, word.length), ""))
-                        word = word.replace(word.slice(st, i), "")
-                        st = null
-                    }
-                }
-                else if (word[i] === "}") {
-                    if (start !== null) {
-                        this.wordsForCheck.splice(0, 0, word.slice(start + 1, i))
-                        let newWord = word.replace(word.slice(start, i + 1), "")
-                        this.wordFinder(newWord)
-                        return
-                    }
-                }
-            }
-        }
-        else {
-            this.wordsForCheck.forEach(element => {
-                if(this.state.variables[element] === ""){
-                    this.arr.push("{" + element + "}")
-                }
-                else {
-                    this.arr.push(this.state.variables[element])
-                }
-            })
-            this.wordsForCheck = []
-            this.arr.push(word)
-        }
-    }
-
-    textGenerator(){
-        const text = this.txt.split(" ")
-        for(let i = 1; i <= text.length; i+=2){
-            text.splice(i, 0, " ")
-        }
-        text.forEach(word => {
-            this.wordFinder(word, [])
-        })
-    }
-
     async UseTemplateFunc(){
-        const form = document.getElementById("sendForm")
-        form.style.display = "block"
-        const from = document.getElementById("from")
-        const to = document.getElementById("to")
-        const title = document.getElementById("title")
-        const textLabel = document.getElementById("textLabel")
-        const template = (this.words.filter(temp => temp.id == this.state.templateId))[0]
-        this.txt = template.templateText
-        this.setState({send: true, text: this.txt})
-        const recipients = this.recipients.filter(temp => temp.tableId == this.state.templateId)
-        const vars = this.vars.filter(temp => temp.tableId == this.state.templateId)
-        await vars.forEach(v => {
-            const copy = Object.assign(this.state.variables, {[v.varName]: "{" + [v.varName] + "}"})
-            this.setState({variables : copy})
-        })
-        await vars.forEach((template, index) => {
-            const label = document.createElement("label")
-            const input = document.createElement("input")
-            input.id = "t" + (index + 1)
-            input.onchange = (e) => {
-                this.setState(prevState => ({
-                    variables : {
-                        ...prevState.variables,
-                        [template.varName] : e.target.value
-                    }
-                }))
-                this.textGenerator()
-                let txt = ""
-                this.arr.forEach(v => txt += v)
-                this.arr = []
-                this.setState({text: txt})
-            }
-            label.innerHTML = template.varName
-            label.htmlFor = "t" + (index + 1)
-            label.style.display = "block"
-            form.appendChild(label)
-            form.appendChild(input)
-            form.insertBefore(input, textLabel)
-            form.insertBefore(label, input)
-        })
-        from.value = template.templateFrom
-        recipients.forEach(recipient => to.value += recipient.email)
-        title.value = template.templateTitle
-    }
-
-    sendMail(){
-        const from = document.getElementById("from").value
-        const to = document.getElementById("to").value
-        const title = document.getElementById("title").value
-        const text = document.getElementById("text").value
-        fetch("/useTemplate/send", {
-            method:'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                user: "gorsimonyan200307@gmail.com",
-                pass: "gor07072003",
-                from: from,
-                to: to,
-                subject: title,
-                text: text
-            })
-        })
-            .then(res => res.text())
-            .then(res => this.setState({apiResponse: res}))
+        await this.setState({template: this.words.filter(temp => temp.id == this.state.templateId)[0],
+                            send: true,
+                            recipientsForSend: this.recipients.filter(temp => temp.tableId == this.state.templateId)[0],
+                            varsForSend: this.vars.filter(temp => temp.tableId == this.state.templateId),
+                            show: true})
     }
 
     render() {
         return (
-            // <Menu width={'150px'} >
-            //     <p id={"defaultTemplates"} className={"templateMenu"}>Default Templates</p>
-            //     <p id={"myTemplates"} className={"templateMenu"}>My Templates</p>
-            // </Menu>
             <div>
                 {!this.state.send && <div id={"useTempsGeneral"}>
                     <span id={"useTemplatesMenu"}>
@@ -263,17 +148,7 @@ class UseTemplate extends Component{
                         {this.state.tempClicked && <button id={"useTemplateButton"} onClick={this.UseTemplateFunc}>Use</button>}
                     </span>
                 </div>}
-                <form id={"sendForm"} style={{"display": "none"}}>
-                    <label htmlFor="from" className="form">from</label>
-                    <input id={"from"} type="email" className="form"/>
-                    <label htmlFor={"to"} className="form">To</label>
-                    <input id={"to"} type="email" className="form"/>
-                    <label htmlFor={"title"} className="form">title</label>
-                    <input id={"title"} className="form"/>
-                    <label htmlFor={"text"} className={"form"} id={"textLabel"}>Text</label>
-                    <input id={"text"} value={this.state.text} className={"form"}/>
-                    <button id={"submit"} type={"submit"} className={"form"} onClick={this.sendMail}>Send</button>
-                </form>
+                {this.state.send && <SendTemplate show={this.state.show} template={this.state.template} recipients={this.state.recipientsForSend} vars={this.state.varsForSend}/>}
             </div>
         )
     }
