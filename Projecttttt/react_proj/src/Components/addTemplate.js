@@ -41,7 +41,7 @@ class AddTemplate extends Component{
                     <label htmlFor="recipients" className="form">To</label>
                     <input id="recipients" type="email" className="form"/>
                     <label htmlFor="title" className="form">title</label>
-                    <input id="title"className="form"/>
+                    <input id="title" className="form"/>
                     <label htmlFor="text" className={"form"}>Text</label>
                     <input id={"text"} className={"form"}/>
                     <button id={"submit"} className={"form"} onClick={() => this.apiCall()}>Add</button>
