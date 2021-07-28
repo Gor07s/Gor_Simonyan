@@ -4,8 +4,8 @@ import UseTemplate from "./Components/useTemplate";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 
 class App extends Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             add: false,
             use: false
@@ -27,6 +27,8 @@ class App extends Component{
                     use: !this.state.use
                 })
                 break;
+            default:
+                throw name
         }
     }
 
@@ -49,11 +51,21 @@ class App extends Component{
                         <button onClick={() => this.addTemplateFunc("add")} className={"gen_but"}>
                             <Link to="/addTemplate">Add Template</Link>
                         </button>
-                        <button onClick={() => this.addTemplateFunc("use")} className={"gen_but"}> <Link to="/useTemplate">Use Template</Link></button>
+                        <button onClick={() => this.addTemplateFunc("use")} className={"gen_but"}>
+                            <Link to="/useTemplate">Use Template</Link>
+                        </button>
                     </div>
-                    {(add || use) && <button onClick={() => this.Back()} id={"back"}> <Link to="/">Back</Link></button>}
-                    {add && <AddTemplate />}
-                    {use && <UseTemplate/>}
+                    {(add || use) && <button onClick={() => this.Back()} id={"back"}>
+                        <Link to="/">Back</Link>
+                    </button>}
+                    <Switch>
+                        <Route path={"/addTemplate"}>
+                            <AddTemplate />
+                        </Route>
+                        <Route path={"/useTemplate"}>
+                            <UseTemplate />
+                        </Route>
+                    </Switch>
                 </div>
             </Router>
         )
