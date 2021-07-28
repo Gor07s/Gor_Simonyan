@@ -19,7 +19,7 @@ class SendTemplate extends Component{
         this.textGenerator = this.textGenerator.bind(this)
         this.wordFinder = this.wordFinder.bind(this)
     }
-
+    
     componentDidMount() {
         if(this.state.show){
             this.UseTemplateFunc()
