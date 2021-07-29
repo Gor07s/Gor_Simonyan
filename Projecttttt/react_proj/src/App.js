@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import AddTemplate from "./Components/addTemplate";
 import UseTemplate from "./Components/useTemplate";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
+import Header from "./Components/header";
 
 class App extends Component{
     constructor(props) {
@@ -43,26 +44,29 @@ class App extends Component{
     }
 
     render() {
-        const { add, use } = this.state;
         return (
             <Router>
+                <Header />
                 <div id={"general"}>
                     <div id={"gen_box"}>
-                        <button onClick={() => this.addTemplateFunc("add")} className={"gen_but"}>
-                            <Link to="/addTemplate">Add Template</Link>
-                        </button>
-                        <button onClick={() => this.addTemplateFunc("use")} className={"gen_but"}>
-                            <Link to="/useTemplate">Use Template</Link>
-                        </button>
+                        <Link to="/addTemplate" id={"link"}>
+                            <button onClick={() => this.addTemplateFunc("add")} className={"gen_but"}>Add Template</button>
+                        </Link>
+                        <Link to="/useTemplate" id={"link"}>
+                            <button onClick={() => this.addTemplateFunc("use")} className={"gen_but"}>Use Template</button>
+                        </Link>
                     </div>
-                    {(add || use) && <button onClick={() => this.Back()} id={"back"}>
-                        <Link to="/">Back</Link>
-                    </button>}
                     <Switch>
                         <Route path={"/addTemplate"}>
+                            <Link to="/">
+                                <button onClick={() => this.Back()} id={"back"}>Back</button>
+                            </Link>
                             <AddTemplate />
                         </Route>
                         <Route path={"/useTemplate"}>
+                            <Link to="/">
+                                <button onClick={() => this.Back()} id={"back"}>Back</button>
+                            </Link>
                             <UseTemplate />
                         </Route>
                     </Switch>

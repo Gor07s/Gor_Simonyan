@@ -88,9 +88,11 @@ class UseTemplate extends Component{
     }
 
     async UseTemplateFunc(){
+        let rec = []
+        this.state.apiResponseTo.filter(temp => temp.tableId == this.state.templateId).forEach(element => rec.push(element.email))
         await this.setState({template: this.state.apiResponse.filter(temp => temp.id == this.state.templateId)[0],
                             send: true,
-                            recipientsForSend: this.state.apiResponseTo.filter(temp => temp.tableId == this.state.templateId)[0],
+                            recipientsForSend: rec,
                             varsForSend: this.state.apiResponseVars.filter(temp => temp.tableId == this.state.templateId),
                             show: true})
     }

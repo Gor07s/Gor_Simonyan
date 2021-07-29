@@ -42,11 +42,12 @@ async function AddTemplates (req, res) {
             varName: word
     })
         .then(table => table.save()))
-    await recipients.create({
+    await req.body.recipient.forEach(rec => recipients.create({
         tableId: id,
-        email: req.body.recipient
+        email: rec
     })
         .then(table => table.save())
+    )
     id++
     await vars.findAll().then(table => res.send(table));
 }
