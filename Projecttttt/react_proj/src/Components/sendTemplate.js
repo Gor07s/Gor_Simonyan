@@ -165,7 +165,6 @@ class SendTemplate extends Component{
         }
         const title = document.getElementById("title").value
         const text = document.getElementById("text").value
-        alert(to)
         await fetch("/useTemplate/send", {
             method:'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -206,7 +205,10 @@ class SendTemplate extends Component{
     render() {
         return (
             <div>
-                <form id={"sendForm"} >
+                <form id={"sendForm"} onSubmit={e => {
+                    e.preventDefault()
+                    window.history.replaceState(null, '', "/")
+                }}>
                     <label htmlFor="from" className="form">from</label>
                     <input id={"from"} type="email" className="form" value={this.state.template.templateFrom}/>
                     <label htmlFor={"to"} className="form">To</label>
@@ -216,7 +218,7 @@ class SendTemplate extends Component{
                     <input id={"title"} className="form" value={this.state.template.templateTitle}/>
                     <label htmlFor={"text"} className={"form"} id={"textLabel"}>Text</label>
                     <input id={"text"} value={this.state.text} className={"form"}/>
-                    <button id={"submit"} type={"button"} className={"form"} onClick={this.sendMail}>Send</button>
+                    <button id={"submit"} type={"submit"} className={"form"} onClick={this.sendMail}>Send</button>
                 </form>
             </div>
         )

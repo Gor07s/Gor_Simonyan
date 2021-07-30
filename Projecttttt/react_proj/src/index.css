@@ -5,6 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  background-color: #a8a3d0;
+}
+
+html{
+  height: 100%;
 }
 
 code {
@@ -12,55 +18,183 @@ code {
     monospace;
 }
 
-.form{
-  display: block;
-}
-
 #gen_box{
-  width: 100px;
+  width: 300px;
+  padding: 50px;
   margin-inline: auto;
-  margin-top: 200px;
+  margin-top: 150px;
+  border-style: groove;
+  background-color: #5263b5;
+  border-color: black;
 }
 
 .gen_but{
-  width: 100px;
+  width: 300px;
   margin-bottom: 20px;
-  height: 30px;
+  height: 80px;
   display: block;
-  background-color: red;
+  background-color: blue;
   cursor: pointer;
   text-decoration: none;
+  font-size: 20px;
+  color: #acd0a3;;
+  border-color: black;
 }
 
 #addBox{
-  width: 300px;
+  width: 60%;
   margin-inline: auto;
-  margin-top: 200px;
+  padding-left: 40px;
 }
 
 #back{
   margin: 20px;
-}
-
-.form{
-  display: block;
+  width: 20%;
+  max-width: 15%;
+  height: 70px;
+  cursor: pointer;
+  background-color: blue;
+  font-size: 20px;
+  color: white;
+  border-color: black;
 }
 
 #header{
   width: 100%;
-  background-color: aquamarine;
+  background-color: #2825d6;
   height: 100px;
   display: flex;
   align-items: center;
 }
 
+#header a{
+  text-decoration: none;
+  color: black;
+}
+
 #header_text{
-  font-size: 30px;
+  font-size: 35px;
   margin-left: 50px;
   text-decoration: none;
-  color: coral;
+  width: 40%;
+}
+#header_text a{
+  color: yellowgreen;
 }
 
 #link{
   text-decoration: none;
+}
+
+#nav_panel{
+  display: flex;
+  margin-right: 0;
+  width: 60%;
+  justify-content: flex-end;
+  padding-right: 20px;
+}
+
+#nav_panel p{
+  margin-left: 10px;
+  font-size: 25px;
+  border-style: groove;
+  padding: 5px;
+  border-color: black;
+  background-color: #5263b5;
+}
+
+#footer{
+  width: 100%;
+  background-color: #2825d6;
+  height: 150px;
+  display: flex;
+  bottom: 0;
+  position: absolute;
+}
+
+.foot{
+  width: 50%;
+  height: 100%;
+}
+
+#contact_l{
+  display: flex;
+  align-items: center ;
+  justify-content: center;
+}
+
+#contact_l p{
+  font-size: 25px;
+  color: white;
+}
+#contact_r{
+  padding-top: 25px;
+  height: 125px;
+  color: white;
+}
+
+#contact_r a{
+  text-decoration: none;
+  color: white;
+}
+
+#root{
+  height: 100%;
+}
+
+#general{
+  height: 100%;
+  position: relative;
+}
+
+label{
+  text-align: center;
+  width: 80px;
+  background-color: #2825d6;
+  color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+input{
+  width: 50%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-style: groove;
+  border-color: black;
+  margin-top: 0;
+}
+
+.formInputRec{
+  margin-left: 100px;
+
+}
+
+.delButRec{
+  height: 38px;
+  width: 40px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  font-size: 30px;
+  background-color: #2825d6;
+  cursor: pointer;
+  color: red;
+}
+
+#addRec{
+  height: 38px;
+  width: 100px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  background-color: #2825d6;
+  color: white;
+  cursor: pointer;
+}
+
+#submit{
+  background-color: #2825d6;
+  color: white;
+  width: 100px;
+  height: 40px;
 }

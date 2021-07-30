@@ -1,10 +1,10 @@
 import React, { Component } from "react"
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 
 class AddTemplate extends Component{
     constructor(props) {
         super(props);
         this.state={
-            apiResponse:"",
             rId: 1
         }
         this.apiCall = this.apiCall.bind(this)
@@ -38,10 +38,13 @@ class AddTemplate extends Component{
     async addRecipient(){
         const input = document.createElement("input")
         const delButton = document.createElement("button")
+        const div = document.createElement("div")
         await this.setState({rId : this.state.rId + 1})
+        div.style.display ="flex"
         input.id = "recipients" + this.state.rId
         input.style.display = "flex"
-        input.className = "form"
+        input.className = "formInputRec"
+        delButton.className = "delButRec"
         delButton.type = "button"
         delButton.id = "del" + this.state.rId
         delButton.innerHTML = "X"
@@ -49,29 +52,42 @@ class AddTemplate extends Component{
             input.parentNode.removeChild(input)
             delButton.style.display = "none"
         }
-        const button = document.getElementById("addRec")
+        const label = document.getElementById("titleDiv")
         const form = document.getElementById("addForm")
-        form.appendChild(input)
-        form.insertBefore(input, button)
-        form.appendChild(delButton)
-        form.insertBefore(delButton, button)
+        div.appendChild(input)
+        div.appendChild(delButton)
+        form.appendChild(div)
+        form.insertBefore(div, label)
     }
 
     render() {
         return(
             <div id={"addBox"}>
-                <form id={"addForm"}>
-                    <label htmlFor="templateName" className="form">Template Name</label>
-                    <input id="templateName" className="form"/>
-                    <label htmlFor="from" className="form">from</label>
-                    <input id="from" type="email" className="form"/>
-                    <label htmlFor="recipients1" className="form">To</label>
-                    <input id="recipients1" type="email" className="form"/>
-                    <button id={"addRec"} className={"form"} type={"button"} onClick={() => this.addRecipient()}>Add Recipient</button>
-                    <label htmlFor="title" className="form">title</label>
-                    <input id="title" className="form"/>
-                    <label htmlFor="text" className={"form"}>Text</label>
-                    <input id={"text"} className={"form"}/>
+                <form id={"addForm"} onSubmit={e => {
+                    e.preventDefault()
+                    //window.history.replaceState(null, '', "/")
+                }}>
+                    <div>
+                        <label htmlFor="templateName" className={"form"}>Template</label>
+                        <input id="templateName" className={"form"}/>
+                    </div>
+                    <div>
+                        <label htmlFor="from" className={"form"}>from</label>
+                        <input id="from" type="email" className={"form"}/>
+                    </div>
+                    <div>
+                        <label htmlFor="recipients1" className={"form"}>To</label>
+                        <input id="recipients1" type="email" className={"form"}/>
+                        <button id={"addRec"} className={"form"} type={"button"} onClick={() => this.addRecipient()}>Add Recipient</button>
+                    </div>
+                    <div id={"titleDiv"}>
+                        <label id={"titleLabel"} htmlFor="title" className={"form"}>title</label>
+                        <input id="title" className={"form"}/>
+                    </div>
+                    <div>
+                        <label htmlFor="text" className={"form"}>Text</label>
+                        <input id={"text"} className={"form"}/>
+                    </div>
                     <button type={"submit"} id={"submit"} className={"form"} onClick={() => this.apiCall()}>Add</button>
                 </form>
             </div>
