@@ -15,7 +15,7 @@ const vars = sequelize.define("vars", {
         timestamps: false
     });
 
-vars.belongsTo(data, {foreignKey: "tableId", targetKey: "id"})
+vars.belongsTo(data, {foreignKey: "tableId", targetKey: "id", onDelete: "CASCADE"})
 
 module.exports = vars;
 

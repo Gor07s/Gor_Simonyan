@@ -15,6 +15,6 @@ const recipients = sequelize.define("recipients", {
         timestamps: false
     });
 
-recipients.belongsTo(data, {foreignKey: "tableId", targetKey: "id"})
+recipients.belongsTo(data, {foreignKey: "tableId", targetKey: "id", onDelete: "CASCADE"})
 
 module.exports = recipients;

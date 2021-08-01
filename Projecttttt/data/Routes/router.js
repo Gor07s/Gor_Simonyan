@@ -7,11 +7,6 @@ const router = express.Router();
 
 router.use(bodyParser.json());
 
-router.post('/test', check, function (req, res){
-    console.log(getWords())
-    res.send(getWords())
-});
-
 router.post('/addTemplate', check, func.AddTemplates);
 
 router.get('/useTemplate/templates', func.GetTemplates);
@@ -20,6 +15,8 @@ router.get('/useTemplate/vars', func.GetVars);
 
 router.post('/useTemplate/send', func.SendMail);
 
-router.delete('/useTemplate', check, func.DeleteTemplates);
+router.put('/useTemplate/modify', check, func.ModTemplates)
+
+router.delete('/useTemplate/delete', func.DeleteTemplates);
 
 module.exports = router;

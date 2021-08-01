@@ -1,7 +1,12 @@
 import React, { Component } from "react"
-import SendTemplate from "./sendTemplate";
+import { Link } from "react-router-dom";
 
-class UseTemplate extends Component{
+export let template = []
+export let recipients = []
+export let vars = []
+export let show = []
+
+export class UseTemplate extends Component{
     constructor(props) {
         super(props);
         this.state={
@@ -10,34 +15,25 @@ class UseTemplate extends Component{
             apiResponseVars:"",
             myTempIsClick: false,
             tempClicked: false,
-            templateId: null,
             send: false,
-            template: {},
-            recipientsForSend: [],
-            varsForSend: [],
-            show: false
+            mod: false,
+            currentTemp: {}
         }
         this.myTemplates = this.myTemplates.bind(this)
         this.showMyTemps = this.showMyTemps.bind(this)
         this.templateOnClick = this.templateOnClick.bind(this)
         this.UseTemplateFunc = this.UseTemplateFunc.bind(this)
+        this.DelTemplateFunc = this.DelTemplateFunc.bind(this)
     }
 
     templateOnClick(id){
-        const p = document.getElementById("example")
-        this.state.apiResponse.filter(template => {
-            if(template.id == id){
-                p.innerHTML = template.templateText
-                this.setState({tempClicked: true})
-                this.setState({templateId: id})
-            }
-            return
-        })
+        const template = this.state.apiResponse.filter(template => template.id == id)[0]
+        this.setState({currentTemp: template,
+                            tempClicked: true})
     }
 
     async myTemplates(){
-        const div = document.getElementById("useTemplatesMenu")
-        const myTemps = document.getElementById("myTemps")
+        const div = document.getElementById("forTemps")
         await fetch("/useTemplate/templates", {
             method:'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -62,58 +58,85 @@ class UseTemplate extends Component{
                 const p = document.createElement("p")
                 p.id = index + 1
                 p.innerHTML = template.templateName
-                p.onclick = () => this.templateOnClick(p.id)
+                p.onclick = () => this.templateOnClick(template.id)
                 div.appendChild(p)
-                div.insertBefore(p, myTemps)
             }
         })
     }
 
     showMyTemps(){
         this.myTemplates()
-        for(let i = 1; i <= this.state.apiResponse.length; i++){
-            const p = document.getElementById(i)
-            if(this.state.myTempIsClick){
-                p.style.display = "none"
-                const g = document.getElementById("example")
-                g.innerHTML = ""
-            }
-            else {
-                p.style.display = "block"
-            }
+        const temp = document.getElementById("forTemps")
+        if(this.state.myTempIsClick){
+            temp.style.display = "none"
+        }
+        else {
+            temp.style.display = "block"
         }
         this.setState({myTempIsClick: !this.state.myTempIsClick,
                             tempClicked: false,
-                            templateId: null})
+                            currentTemp: null})
     }
 
-    async UseTemplateFunc(){
-        let rec = []
-        this.state.apiResponseTo.filter(temp => temp.tableId == this.state.templateId).forEach(element => rec.push(element.email))
-        await this.setState({template: this.state.apiResponse.filter(temp => temp.id == this.state.templateId)[0],
-                            send: true,
-                            recipientsForSend: rec,
-                            varsForSend: this.state.apiResponseVars.filter(temp => temp.tableId == this.state.templateId),
-                            show: true})
+    UseTemplateFunc(){
+        template.splice(0, template.length)
+        vars.splice(0, vars.length)
+        recipients.splice(0, recipients.length)
+        template.push(this.state.currentTemp)
+        this.state.apiResponseTo.filter(temp => temp.tableId == this.state.currentTemp.id).forEach(element => recipients.push(element.email))
+        this.state.apiResponseVars.filter(temp => temp.tableId == this.state.currentTemp.id).forEach(element => vars.push(element))
+        show.push(true)
+    }
+
+    async DelTemplateFunc(){
+        await fetch("/useTemplate/delete", {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: this.state.currentTemp.id
+            })
+        })
+        for (let i = 1; i <= this.state.apiResponse.length; i++){
+            const p = document.getElementById(i)
+            p.parentNode.removeChild(p)
+        }
+        await this.showMyTemps()
     }
 
     render() {
         return (
-            <div>
-                {!this.state.send && <div id={"useTempsGeneral"}>
-                    <span id={"useTemplatesMenu"}>
-                        <p id={"defTemps"}>Default Templates</p>
-                        <p id={"myTemps"} onClick={this.showMyTemps}>My Templates</p>
-                    </span>
-                    <span>
-                        <p id={"example"}></p>
-                        {this.state.tempClicked && <button id={"useTemplateButton"} onClick={this.UseTemplateFunc}>Use</button>}
-                    </span>
-                </div>}
-                {this.state.send && <SendTemplate show={this.state.show} template={this.state.template} recipients={this.state.recipientsForSend} vars={this.state.varsForSend}/>}
+            <div style={{"width" : "100%"}}>
+                <Link to="/">
+                    <button id={"back"}>Back</button>
+                </Link>
+                <div id={"UseTempsDiv"}>
+                    {!this.state.send && !this.state.mod && <div id={"useTempsGeneral"}>
+                        <span id={"useTemplatesMenu"}>
+                            <p id={"defTemps"}>Default Templates</p>
+                            <p id={"myTemps"} onClick={this.showMyTemps}>My Templates</p>
+                        </span>
+                        <div id={"forTemps"}>
+
+                        </div>
+                    </div> }
+                    {this.state.tempClicked && !this.state.send && !this.state.mod && <span id={"exampleSpan"}>
+                        <div id={"titleDiv"}>
+                            <label id={"titleLabel"} htmlFor="title" className={"form"} >title</label>
+                            <input id="title" className={"form"} value={this.state.currentTemp.templateTitle}/>
+                        </div>
+                        <textarea id={"example"} value={this.state.currentTemp.templateText}/>
+                        <div id={"useButtons"}>
+                            <Link to={"/useTemplate/send"}>
+                                <button id={"useTemplateButton"} onClick={() => this.UseTemplateFunc()}>Use</button>
+                            </Link>
+                            <Link to={"/useTemplate/modify"}>
+                                <button id={"modTemplateButton"} onClick={() => this.UseTemplateFunc()}>Modify</button>
+                            </Link>
+                            <button id={"delTemplateButton"} onClick={() => this.DelTemplateFunc()}>Delete</button>
+                        </div>
+                    </span>}
+                </div>
             </div>
         )
     }
 }
-
-export default UseTemplate

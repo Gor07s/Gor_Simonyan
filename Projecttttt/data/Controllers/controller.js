@@ -52,8 +52,27 @@ async function AddTemplates (req, res) {
     await vars.findAll().then(table => res.send(table));
 }
 
-async function PutTemplates (req, res) {
-    await data.update({name: req.body.name}, {where: {id: req.body.id}});
+async function ModTemplates (req, res) {
+    await data.update({
+            templateName: req.body.templateName,
+            templateText: req.body.templateText,
+            templateTitle: req.body.title,
+            templateFrom: req.body.from},
+        {where: {id: req.body.id}})
+    vars.destroy({where : {tableId : req.body.id}})
+    const words = getWords()
+    await words.forEach(word => vars.create({
+        tableId: req.body.id,
+        varName: word
+    })
+        .then(table => table.save()))
+    recipients.destroy({where: {tableId: req.body.id}})
+    await req.body.recipient.forEach(rec => recipients.create({
+            tableId: req.body.id,
+            email: rec
+        })
+            .then(table => table.save())
+    )
     data.findAll().then(table => res.send(table));
 }
 
@@ -67,4 +86,4 @@ async function SendMail(req, res){
     res.send("Message send!")
 }
 
-module.exports = { GetTemplates, AddTemplates, SendMail, DeleteTemplates, GetRecipients, GetVars };
+module.exports = { GetTemplates, AddTemplates, SendMail, DeleteTemplates, GetRecipients, GetVars, ModTemplates };

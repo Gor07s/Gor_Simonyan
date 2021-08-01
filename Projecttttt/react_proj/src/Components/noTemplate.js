@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import {Link} from "react-router-dom";
 
-class AddTemplate extends Component{
+class NoTemplate extends Component{
     constructor(props) {
         super(props);
         this.state={
@@ -9,40 +9,25 @@ class AddTemplate extends Component{
         }
         this.apiCall = this.apiCall.bind(this)
         this.addRecipient = this.addRecipient.bind(this)
-        this.check = this.check.bind(this)
-    }
-
-    check(){
-        if (document.getElementById("templateName").value === "" ||
-            document.getElementById("text").value === "") {
-            alert("Pls, write anything in lines Template and Text!")
-            return false
-        }
-        for (let i = 1; i <= this.state.rId; i++) {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("recipients" + i).value))  return true
-        }
-        alert("You have entered an invalid email address!")
-        return false
     }
 
     async apiCall(){
-        if (this.check()) {
-            let mail = []
-            for (let i = 1; i <= this.state.rId; i++) {
-                mail.push(document.getElementById("recipients" + i).value)
-            }
-            await fetch("/addTemplate", {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    templateName: document.getElementById("templateName").value,
-                    templateText: document.getElementById("text").value,
-                    recipient: mail,
-                    title: document.getElementById("title").value,
-                    from: document.getElementById("from").value
-                })
-            })
+        let mail = []
+        for (let i = 1; i <= this.state.rId; i++) {
+            mail.push(document.getElementById("recipients" + i).value)
         }
+        await fetch("/useTemplate/send", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user: "gorsimonyan200307@gmail.com",
+                pass: "gor07072003",
+                text: document.getElementById("text").value,
+                to: mail,
+                subject: document.getElementById("title").value,
+                from: document.getElementById("from").value
+            })
+        })
     }
 
     async addRecipient(){
@@ -71,7 +56,7 @@ class AddTemplate extends Component{
 
     render() {
         return(
-            <div>
+            <div style={{"width" : "100%"}}>
                 <Link to="/">
                     <button id={"back"}>Back</button>
                 </Link>
@@ -80,10 +65,6 @@ class AddTemplate extends Component{
                         e.preventDefault()
                         //window.history.replaceState(null, '', "/")
                     }}>
-                        <div>
-                            <label htmlFor="templateName" className={"form"}>Template*</label>
-                            <input id="templateName" className={"form"}/>
-                        </div>
                         <div>
                             <label htmlFor="from" className={"form"}>from</label>
                             <input id="from" className={"form"}/>
@@ -101,12 +82,10 @@ class AddTemplate extends Component{
                             <input id="title" className={"form"}/>
                         </div>
                         <div id={"textDiv"}>
-                            <label htmlFor="text" className={"form"}>Text*</label>
+                            <label htmlFor="text" className={"form"}>Text</label>
                             <textarea id={"text"} className={"form"}/>
                         </div>
-                        <Link to={"/"}>
-                            <button type={"submit"} id={"submit"} className={"form"} onClick={() => this.apiCall()}>Add</button>
-                        </Link>
+                        <button type={"submit"} id={"submit"} className={"form"} onClick={() => this.apiCall()}>Send</button>
                     </form>
                 </div>
             </div>
@@ -114,4 +93,4 @@ class AddTemplate extends Component{
     }
 }
 
-export default AddTemplate
+export default NoTemplate

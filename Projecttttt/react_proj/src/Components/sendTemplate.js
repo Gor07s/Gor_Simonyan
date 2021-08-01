@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import {Link} from "react-router-dom";
 
 class SendTemplate extends Component{
     constructor(props) {
@@ -6,11 +7,11 @@ class SendTemplate extends Component{
         this.state={
             show: props.show,
             variables: {},
-            template: props.template,
-            txt : props.template.templateText,
-            text: props.template.templateText,
+            template: props.template[0],
+            txt : props.template[0].templateText,
+            text: props.template[0].templateText,
             recipients : props.recipients,
-            recCount: 1
+            recCount: 1,
         }
         this.wordsForCheck = []
         this.arr = []
@@ -65,10 +66,13 @@ class SendTemplate extends Component{
                 }
                 else if (word[i] === "}") {
                     if (start !== null) {
-                        this.wordsForCheck.splice(0, 0, word.slice(start + 1, i))
-                        let newWord = word.replace(word.slice(start, i + 1), "")
-                        this.wordFinder(newWord)
-                        return
+                        if (this.state.variables[word.slice(start + 1, i)] !== undefined) {
+                            this.wordsForCheck.splice(0, 0, word.slice(start + 1, i))
+                        }
+                            let newWord = word.replace(word.slice(start, i + 1), "")
+                            this.wordFinder(newWord)
+                            return
+
                     }
                 }
             }
@@ -98,8 +102,8 @@ class SendTemplate extends Component{
     }
 
     async UseTemplateFunc(){
-        const textLabel = document.getElementById("textLabel")
-        const form = document.getElementById("sendForm")
+        console.log(this.state.template)
+        const div = document.getElementById("forVars")
         await this.vars.forEach(v => {
             const copy = Object.assign(this.state.variables, {[v.varName]: "{" + [v.varName] + "}"})
             this.setState({variables : copy})
@@ -107,6 +111,7 @@ class SendTemplate extends Component{
         await this.vars.forEach((template, index) => {
             const label = document.createElement("label")
             const input = document.createElement("input")
+            const newDiv = document.createElement("div")
             input.id = "t" + (index + 1)
             input.onchange = (e) => {
                 this.setState(prevState => ({
@@ -121,34 +126,35 @@ class SendTemplate extends Component{
                 this.arr = []
                 this.setState({text: txt})
             }
-            label.innerHTML = template.varName
+            label.innerHTML = template.varName || "{noname}"
             label.htmlFor = "t" + (index + 1)
-            label.style.display = "block"
-            form.appendChild(label)
-            form.appendChild(input)
-            form.insertBefore(input, textLabel)
-            form.insertBefore(label, input)
+            newDiv.appendChild(label)
+            newDiv.appendChild(input)
+            div.appendChild(newDiv)
         })
-        const addButton = document.getElementById("addRec")
+        const div2= document.getElementById("addRecBigDiv")
         await this.state.recipients.forEach((rec, index) => {
             if (index !== 0){
                 const input = document.createElement("input")
                 const button = document.createElement("button")
+                const div = document.createElement("div")
                 input.value = rec
+                div.className = "addRecDiv"
+                div.style.display = "flex"
                 this.setState({recCount: this.state.recCount + 1})
                 input.id = "to" + this.state.recCount
                 button.innerHTML = "X"
                 input.style.display = "flex"
-                input.className = "form"
+                input.className = "formInputRec"
+                button.className = "delButRec"
                 button.type = "button"
                 button.onclick = () => {
                     input.parentNode.removeChild(input)
                     button.style.display = "none"
                 }
-                form.appendChild(input)
-                form.insertBefore(input, addButton)
-                form.appendChild(button)
-                form.insertBefore(button, addButton)
+                div.appendChild(input)
+                div.appendChild(button)
+                div2.appendChild(div)
             }
         })
     }
@@ -184,9 +190,14 @@ class SendTemplate extends Component{
     async addRecipient(){
         const input = document.createElement("input")
         const delButton = document.createElement("button")
-        await this.setState({recCount : this.state.recCount + 1})
-        input.id = "to" + this.state.recCount
-        input.className = "form"
+        const div = document.createElement("div")
+        await this.setState({rId : this.state.rId + 1})
+        div.style.display ="flex"
+        div.className = "addRecDiv"
+        input.id = "recipients" + this.state.rId
+        input.style.display = "flex"
+        input.className = "formInputRec"
+        delButton.className = "delButRec"
         delButton.type = "button"
         delButton.id = "del" + this.state.rId
         delButton.innerHTML = "X"
@@ -194,32 +205,66 @@ class SendTemplate extends Component{
             input.parentNode.removeChild(input)
             delButton.style.display = "none"
         }
-        const button = document.getElementById("addRec")
-        const form = document.getElementById("sendForm")
-        form.appendChild(input)
-        form.insertBefore(input, button)
-        form.appendChild(delButton)
-        form.insertBefore(delButton, button)
+        const bigDiv = document.getElementById("addRecBigDiv")
+        div.appendChild(input)
+        div.appendChild(delButton)
+        bigDiv.appendChild(div)
     }
 
     render() {
         return (
-            <div>
-                <form id={"sendForm"} onSubmit={e => {
-                    e.preventDefault()
-                    window.history.replaceState(null, '', "/")
-                }}>
-                    <label htmlFor="from" className="form">from</label>
-                    <input id={"from"} type="email" className="form" value={this.state.template.templateFrom}/>
-                    <label htmlFor={"to"} className="form">To</label>
-                    <input id={"to1"} type="email" className="form" value={this.state.recipients[0]}/>
-                    <button type={"button"} id={"addRec"} style={{"display" : "block"}} onClick={() => this.addRecipient()}>Add Recipient</button>
-                    <label id={"titleLabel"} htmlFor={"title"} className="form">title</label>
-                    <input id={"title"} className="form" value={this.state.template.templateTitle}/>
-                    <label htmlFor={"text"} className={"form"} id={"textLabel"}>Text</label>
-                    <input id={"text"} value={this.state.text} className={"form"}/>
-                    <button id={"submit"} type={"submit"} className={"form"} onClick={this.sendMail}>Send</button>
-                </form>
+            <div style={{"width" : "100%"}}>
+                <Link to="/">
+                    <button id={"back"}>Back</button>
+                </Link>
+                <div  id={"sendBox"}>
+                    <form id={"sendForm"} onSubmit={e => {
+                        e.preventDefault()
+                        window.history.replaceState(null, '', "/")
+                    }}>
+                        <div>
+                            <label htmlFor="from" className="form">from</label>
+                            <input id={"from"} type="email" className="form" value={this.state.template.templateFrom} onChange={(e) => {this.setState(prevState => ({
+                                template : {
+                                    ...prevState.template,
+                                    templateFrom : e.target.value
+                                }
+                            }))}}/>
+                        </div>
+                        <div>
+                            <label htmlFor={"to"} className="form">To</label>
+                            <input id={"to1"} type="email" className="form" value={this.state.recipients[0]} onChange={(e) => {this.setState(prevState => ({
+                                recipients: {
+                                    ...prevState.recipients,
+                                    [0]: e.target.value
+                                }
+                            }))}}/>
+                            <button type={"button"} id={"addRec"} onClick={() => this.addRecipient()}>Add Recipient</button>
+                        </div>
+                        <div id={"addRecBigDiv"}>
+
+                        </div>
+                        <div>
+                            <label id={"titleLabel"} htmlFor={"title"} className="form">title</label>
+                            <input id={"title"} className="form" value={this.state.template.templateTitle} onChange={(e) => {this.setState(prevState => ({
+                                template : {
+                                    ...prevState.template,
+                                    templateTitle : e.target.value
+                                }
+                            }))}}/>
+                        </div>
+                        <div id={"forVars"}>
+
+                        </div>
+                        <div>
+                            <label htmlFor={"text"} className={"form"} id={"textLabel"}>Text</label>
+                            <textarea id={"text"} value={this.state.text} className={"form"} onChange={(e) => this.setState({text: e.target.value, txt: e.target.value})}/>
+                        </div>
+                        <Link to={"/"}>
+                            <button id={"submit"} type={"submit"} className={"form"} onClick={this.sendMail}>Send</button>
+                        </Link>
+                    </form>
+                </div>
             </div>
         )
     }
