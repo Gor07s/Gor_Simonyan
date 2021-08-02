@@ -175,6 +175,7 @@ input{
   border-style: groove;
   border-color: black;
   margin-top: 0;
+  display: inline-block;
 }
 
 .formInputRec{
@@ -310,10 +311,23 @@ input{
   width: calc(50% + 170px);
   max-height: 150px;
   padding-right: 15px;
+  border-color: black;
 }
 
 #useButtons{
   width: calc(50% + 120px);
   display: flex;
   justify-content: space-between;
+}
+
+.checkbox{
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.checkDivs{
+  max-height: 100px;
+  overflow: auto;
+  width: calc(50% + 170px);
 }

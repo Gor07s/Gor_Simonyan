@@ -82,7 +82,14 @@ async function DeleteTemplates (req, res) {
 }
 
 async function SendMail(req, res){
-    await sendMail(req.body.user,req.body.pass,req.body.from,req.body.to,req.body.subject,req.body.text)
+    if (typeof(req.body.text) === "string") {
+        await sendMail(req.body.user, req.body.pass, req.body.from, req.body.to, req.body.subject, req.body.text)
+    }
+    else {
+        for (let i = 0; i < req.body.to.length; i++){
+            await sendMail(req.body.user, req.body.pass, req.body.from, req.body.to[i], req.body.subject, req.body.text[i])
+        }
+    }
     res.send("Message send!")
 }
 

@@ -19,7 +19,7 @@ class AddTemplate extends Component{
             return false
         }
         for (let i = 1; i <= this.state.rId; i++) {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("recipients" + i).value))  return true
+            if ((/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("recipients" + i).value)) || document.getElementById("recipients" + i).value === "")  return true
         }
         alert("You have entered an invalid email address!")
         return false

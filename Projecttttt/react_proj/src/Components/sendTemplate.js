@@ -6,21 +6,24 @@ class SendTemplate extends Component{
         super(props);
         this.state={
             show: props.show,
-            variables: {},
             template: props.template[0],
             txt : props.template[0].templateText,
             text: props.template[0].templateText,
             recipients : props.recipients,
             recCount: 1,
+            checks: 0
         }
+        this.texts = []
         this.wordsForCheck = []
         this.arr = []
         this.vars = props.vars
+        this.varsIndividual = {}
         this.UseTemplateFunc = this.UseTemplateFunc.bind(this)
         this.sendMail = this.sendMail.bind(this)
         this.textGenerator = this.textGenerator.bind(this)
         this.wordFinder = this.wordFinder.bind(this)
         this.addRecipient = this.addRecipient.bind(this)
+        this.check = this.check.bind(this)
     }
 
     componentDidMount() {
@@ -37,18 +40,23 @@ class SendTemplate extends Component{
         }
     }
 
-    wordFinder(word){
+    wordFinder(word, index){
         let start = null
         let st = 0
         if(word.includes("{") && word.includes("}")) {
             for (let i = 0; i < word.length; i++) {
                 if (word[0] !== "{"){
                     this.wordsForCheck.forEach(element => {
-                        if(this.state.variables[element] === ""){
+                        let varInd = this.varsIndividual[element][index]
+                        console.log(varInd)
+                        if (varInd === undefined){
+                            varInd = this.varsIndividual[element][0]
+                        }
+                        if(varInd === ""){
                             this.arr.push("{" + element + "}")
                         }
                         else {
-                            this.arr.push(this.state.variables[element])
+                            this.arr.push(varInd)
                         }
                     })
                     this.wordsForCheck = []
@@ -66,11 +74,11 @@ class SendTemplate extends Component{
                 }
                 else if (word[i] === "}") {
                     if (start !== null) {
-                        if (this.state.variables[word.slice(start + 1, i)] !== undefined) {
+                        if (this.varsIndividual[word.slice(start + 1, i)][0] !== undefined ) {
                             this.wordsForCheck.splice(0, 0, word.slice(start + 1, i))
                         }
                             let newWord = word.replace(word.slice(start, i + 1), "")
-                            this.wordFinder(newWord)
+                            this.wordFinder(newWord, index)
                             return
 
                     }
@@ -79,11 +87,15 @@ class SendTemplate extends Component{
         }
         else {
             this.wordsForCheck.forEach(element => {
-                if(this.state.variables[element] === ""){
+                let varInd = this.varsIndividual[element][index]
+                if (varInd === undefined){
+                    varInd = this.varsIndividual[element][0]
+                }
+                if(varInd === ""){
                     this.arr.push("{" + element + "}")
                 }
                 else {
-                    this.arr.push(this.state.variables[element])
+                    this.arr.push(varInd)
                 }
             })
             this.wordsForCheck = []
@@ -91,45 +103,100 @@ class SendTemplate extends Component{
         }
     }
 
-    textGenerator(){
+    textGenerator(index){
         const text = this.state.txt.split(" ")
         for(let i = 1; i <= text.length; i+=2){
             text.splice(i, 0, " ")
         }
         text.forEach(word => {
-            this.wordFinder(word, [])
+            this.wordFinder(word, index)
         })
+        let txt = ""
+        this.arr.forEach(v => txt += v)
+        this.arr = []
+        this.texts[index] = txt
+        this.setState({text: txt})
+    }
+
+    check(checkbox, variable){
+        if (checkbox.checked){
+            const div = document.getElementById("d" + checkbox.id)
+            for (let i = 2; i <= this.state.recCount; i++) {
+                if (!document.getElementById("v" + checkbox.id + "dv" + i)) {
+                    const label = document.createElement("label")
+                    const input = document.createElement("input")
+                    const newDiv = document.createElement("div")
+                    input.id = "t" + checkbox.id + "_" + i
+                    this.varsIndividual[variable][i-1] = "{" + variable + "}"
+                    input.onchange = (e) => {
+                        this.varsIndividual[variable][i-1] = e.target.value || "{" + variable + "}"
+                    }
+                    input.placeholder = "for recipient" + i
+                    label.innerHTML = variable
+                    label.htmlFor = "t" + checkbox.id + "_" + i
+                    newDiv.id = "v" + checkbox.id + "dv" + i
+                    newDiv.appendChild(label)
+                    newDiv.appendChild(input)
+                    div.appendChild(newDiv)
+                }
+                div.style.borderStyle = "groove"
+                div.style.borderColor = "black"
+                div.style.marginBottom = "10px"
+            }
+            const extraDiv = document.getElementById("v" + checkbox.id + "dv" + (this.state.recCount + 1))
+            if (extraDiv) {
+                extraDiv.parentNode.removeChild(extraDiv)
+            }
+        }
+        else {
+            for (let i = 2; i <= this.state.recCount; i++){
+                const div = document.getElementById("v" + checkbox.id + "dv" + i)
+                if(div) div.parentNode.removeChild(div)
+            }
+            this.varsIndividual[variable] = [this.varsIndividual[variable][0]]
+        }
     }
 
     async UseTemplateFunc(){
-        console.log(this.state.template)
         const div = document.getElementById("forVars")
         await this.vars.forEach(v => {
-            const copy = Object.assign(this.state.variables, {[v.varName]: "{" + [v.varName] + "}"})
-            this.setState({variables : copy})
+            const copy = Object.assign(this.varsIndividual, {[v.varName]: ["{" + [v.varName] + "}"]})
+            this.varsIndividual = copy
         })
         await this.vars.forEach((template, index) => {
+            div.style.borderStyle = "groove"
+            div.style.borderColor = "black"
+            div.style.paddingTop = "10px"
+            div.style.paddingBottom = "10px"
+            div.style.paddingLeft = "10px"
             const label = document.createElement("label")
             const input = document.createElement("input")
             const newDiv = document.createElement("div")
+            const check = document.createElement("input")
+            newDiv.id = "d" + (index + 1)
+            newDiv.className = "checkDivs"
+            check.className = "checkbox"
+            check.type = "checkbox"
+            check.id = index + 1
             input.id = "t" + (index + 1)
             input.onchange = (e) => {
-                this.setState(prevState => ({
-                    variables : {
-                        ...prevState.variables,
-                        [template.varName] : e.target.value
-                    }
-                }))
-                this.textGenerator()
-                let txt = ""
-                this.arr.forEach(v => txt += v)
-                this.arr = []
-                this.setState({text: txt})
+                this.varsIndividual[template.varName][0] = e.target.value || "{" + template.varName + "}"
+                this.textGenerator(0)
             }
             label.innerHTML = template.varName || "{noname}"
             label.htmlFor = "t" + (index + 1)
+            check.onclick = (e) => {
+                if (e.target.checked){
+                    this.setState({checks: this.state.checks + 1})
+                }
+                else {
+                    this.setState({checks: this.state.checks - 1})
+                }
+                this.check(e.target, label.innerHTML)
+            }
             newDiv.appendChild(label)
             newDiv.appendChild(input)
+            newDiv.appendChild(check)
             div.appendChild(newDiv)
         })
         const div2= document.getElementById("addRecBigDiv")
@@ -160,26 +227,41 @@ class SendTemplate extends Component{
     }
 
     async sendMail(){
-        const from = document.getElementById("from").value
+        let text = ""
+        if (this.state.checks === 0){
+            text = document.getElementById("text").value
+        }
+        else {
+            for (let i = 0; i < this.state.recCount; i++){
+                this.textGenerator(i)
+            }
+            text = this.texts
+        }
         let to = ""
+        let a = []
         for (let i = 1; i <= this.state.recCount; i++){
-            const rec = document.getElementById("to" + i).value
-            to += rec
-            if (i !== this.state.recCount){
-                to += ","
+            const rec = document.getElementById("recipients" + i).value
+            if (rec === "") continue
+            if (this.state.checks === 0){
+                to += rec
+                if (i !== this.state.recCount){
+                    to += ","
+                }
+            }
+            else {
+                a.push(rec)
+                to = a
             }
         }
-        const title = document.getElementById("title").value
-        const text = document.getElementById("text").value
         await fetch("/useTemplate/send", {
             method:'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 user: "gorsimonyan200307@gmail.com",
                 pass: "gor07072003",
-                from: from,
+                from: document.getElementById("from").value,
                 to: to,
-                subject: title,
+                subject: document.getElementById("title").value,
                 text: text
             })
         })
@@ -191,19 +273,28 @@ class SendTemplate extends Component{
         const input = document.createElement("input")
         const delButton = document.createElement("button")
         const div = document.createElement("div")
-        await this.setState({rId : this.state.rId + 1})
+        await this.setState({recCount : this.state.recCount + 1})
+        for (let i = 1; i <= this.vars.length; i++){
+            const checkbox = document.getElementById(i)
+            this.check(checkbox, Object.keys(this.varsIndividual)[i-1])
+        }
         div.style.display ="flex"
         div.className = "addRecDiv"
-        input.id = "recipients" + this.state.rId
+        input.id = "recipients" + this.state.recCount
         input.style.display = "flex"
         input.className = "formInputRec"
         delButton.className = "delButRec"
         delButton.type = "button"
-        delButton.id = "del" + this.state.rId
+        delButton.id = "del" + this.state.recCount
         delButton.innerHTML = "X"
-        delButton.onclick = () => {
+        delButton.onclick = async () => {
             input.parentNode.removeChild(input)
             delButton.style.display = "none"
+            await this.setState({recCount : this.state.recCount - 1})
+            for (let i = 1; i <= this.vars.length; i++){
+                const checkbox = document.getElementById(i)
+                this.check(checkbox, Object.keys(this.varsIndividual)[0])
+            }
         }
         const bigDiv = document.getElementById("addRecBigDiv")
         div.appendChild(input)
@@ -232,8 +323,8 @@ class SendTemplate extends Component{
                             }))}}/>
                         </div>
                         <div>
-                            <label htmlFor={"to"} className="form">To</label>
-                            <input id={"to1"} type="email" className="form" value={this.state.recipients[0]} onChange={(e) => {this.setState(prevState => ({
+                            <label htmlFor={"recipients1"} className="form">To</label>
+                            <input id={"recipients1"} type="email" className="form" value={this.state.recipients[0]} onChange={(e) => {this.setState(prevState => ({
                                 recipients: {
                                     ...prevState.recipients,
                                     [0]: e.target.value

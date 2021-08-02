@@ -18,11 +18,9 @@ const data = sequelize.define("data", {
     },
     templateTitle:{
         type: Sequelize.STRING,
-        allowNull: false
     },
     templateFrom:{
         type: Sequelize.STRING,
-        allowNull: false
     }},
 {
     timestamps: false

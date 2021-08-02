@@ -15,8 +15,6 @@ export class UseTemplate extends Component{
             apiResponseVars:"",
             myTempIsClick: false,
             tempClicked: false,
-            send: false,
-            mod: false,
             currentTemp: {}
         }
         this.myTemplates = this.myTemplates.bind(this)
@@ -110,7 +108,7 @@ export class UseTemplate extends Component{
                     <button id={"back"}>Back</button>
                 </Link>
                 <div id={"UseTempsDiv"}>
-                    {!this.state.send && !this.state.mod && <div id={"useTempsGeneral"}>
+                    <div id={"useTempsGeneral"}>
                         <span id={"useTemplatesMenu"}>
                             <p id={"defTemps"}>Default Templates</p>
                             <p id={"myTemps"} onClick={this.showMyTemps}>My Templates</p>
@@ -118,8 +116,8 @@ export class UseTemplate extends Component{
                         <div id={"forTemps"}>
 
                         </div>
-                    </div> }
-                    {this.state.tempClicked && !this.state.send && !this.state.mod && <span id={"exampleSpan"}>
+                    </div>
+                    {this.state.tempClicked && <span id={"exampleSpan"}>
                         <div id={"titleDiv"}>
                             <label id={"titleLabel"} htmlFor="title" className={"form"} >title</label>
                             <input id="title" className={"form"} value={this.state.currentTemp.templateTitle}/>
