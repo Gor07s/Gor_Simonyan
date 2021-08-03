@@ -1,6 +1,6 @@
 const express = require('express');
 const func = require('../Controllers/controller');
-const { check, getWords } = require('../Middlewares/middleware');
+const { check } = require('../Middlewares/middleware');
 const bodyParser = require('body-parser');
 
 const router = express.Router();

@@ -72,7 +72,7 @@ code {
 
 #header a{
   text-decoration: none;
-  color: black;
+  color: #a8a3d0;
 }
 
 #header_text{
@@ -101,10 +101,7 @@ code {
 #nav_panel p{
   margin-left: 10px;
   font-size: 25px;
-  border-style: groove;
   padding: 5px;
-  border-color: black;
-  background-color: #5263b5;
 }
 
 #foot{
@@ -330,4 +327,16 @@ input{
   max-height: 100px;
   overflow: auto;
   width: calc(50% + 170px);
+}
+
+@media screen and (max-width: 800px) {
+  #UseTempsDiv{
+    display: block;
+    height: fit-content;
+    margin-bottom: 30px;
+  }
+  #titleDiv, #example, #useButtons{
+    margin-left: 20px;
+  }
+
 }

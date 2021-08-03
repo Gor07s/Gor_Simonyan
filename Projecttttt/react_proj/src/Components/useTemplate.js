@@ -9,14 +9,15 @@ export let show = []
 export class UseTemplate extends Component{
     constructor(props) {
         super(props);
-        this.state={
-            apiResponse:"",
-            apiResponseTo:"",
-            apiResponseVars:"",
+        this.state= {
+            apiResponse: "",
+            apiResponseTo: "",
+            apiResponseVars: "",
             myTempIsClick: false,
             tempClicked: false,
-            currentTemp: {}
+            currentTemp: {},
         }
+
         this.myTemplates = this.myTemplates.bind(this)
         this.showMyTemps = this.showMyTemps.bind(this)
         this.templateOnClick = this.templateOnClick.bind(this)
@@ -110,10 +111,12 @@ export class UseTemplate extends Component{
                 <div id={"UseTempsDiv"}>
                     <div id={"useTempsGeneral"}>
                         <span id={"useTemplatesMenu"}>
-                            <p id={"defTemps"}>Default Templates</p>
                             <p id={"myTemps"} onClick={this.showMyTemps}>My Templates</p>
                         </span>
                         <div id={"forTemps"}>
+
+                        </div>
+                        <div id={"forDefs"}>
 
                         </div>
                     </div>

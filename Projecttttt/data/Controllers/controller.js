@@ -1,6 +1,6 @@
 const data = require('../models/data');
 const vars = require('../models/vars');
-const recipients = require('../models/recipients')
+const recipients = require('../models/recipients');
 const bodyParser = require('body-parser');
 const express = require('express');
 const sequelize = require('../models/index');

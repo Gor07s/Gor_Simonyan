@@ -24,6 +24,7 @@ class SendTemplate extends Component{
         this.wordFinder = this.wordFinder.bind(this)
         this.addRecipient = this.addRecipient.bind(this)
         this.check = this.check.bind(this)
+        this.checkMail = this.checkMail.bind(this)
     }
 
     componentDidMount() {
@@ -38,6 +39,24 @@ class SendTemplate extends Component{
             this.UseTemplateFunc()
             this.setState({show: false})
         }
+    }
+
+    checkMail(){
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("log").value)) {
+            alert("You have entered an invalid login!")
+            return false
+        }
+        if (document.getElementById("pass").value === ""){
+            alert("Write password!")
+            return false
+        }
+        for (let i = 1; i <= this.state.recCount; i++) {
+            if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("recipients" + i).value)) {
+                alert("You have entered an invalid email address!")
+                return false
+            }
+        }
+        return true
     }
 
     wordFinder(word, index){
@@ -227,6 +246,7 @@ class SendTemplate extends Component{
     }
 
     async sendMail(){
+        if (!this.checkMail()) return false
         let text = ""
         if (this.state.checks === 0){
             text = document.getElementById("text").value
@@ -257,8 +277,8 @@ class SendTemplate extends Component{
             method:'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                user: "gorsimonyan200307@gmail.com",
-                pass: "gor07072003",
+                user: document.getElementById("log").value,
+                pass: document.getElementById("pass").value,
                 from: document.getElementById("from").value,
                 to: to,
                 subject: document.getElementById("title").value,
@@ -314,6 +334,14 @@ class SendTemplate extends Component{
                         window.history.replaceState(null, '', "/")
                     }}>
                         <div>
+                            <label htmlFor="log" className="form">Login*</label>
+                            <input id={"log"} type="email" className="form"/>
+                        </div>
+                        <div>
+                            <label htmlFor="pass" className="form">Password*</label>
+                            <input id={"pass"} type="password" className="form"/>
+                        </div>
+                        <div>
                             <label htmlFor="from" className="form">from</label>
                             <input id={"from"} type="email" className="form" value={this.state.template.templateFrom} onChange={(e) => {this.setState(prevState => ({
                                 template : {
@@ -323,7 +351,7 @@ class SendTemplate extends Component{
                             }))}}/>
                         </div>
                         <div>
-                            <label htmlFor={"recipients1"} className="form">To</label>
+                            <label htmlFor={"recipients1"} className="form">To*</label>
                             <input id={"recipients1"} type="email" className="form" value={this.state.recipients[0]} onChange={(e) => {this.setState(prevState => ({
                                 recipients: {
                                     ...prevState.recipients,

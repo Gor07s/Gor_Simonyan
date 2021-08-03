@@ -53,7 +53,6 @@ class AddTemplate extends Component{
         div.style.display ="flex"
         div.className = "addRecDiv"
         input.id = "recipients" + this.state.rId
-        input.style.display = "flex"
         input.className = "formInputRec"
         delButton.className = "delButRec"
         delButton.type = "button"

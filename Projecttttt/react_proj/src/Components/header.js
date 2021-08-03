@@ -10,9 +10,9 @@ class Header extends Component {
                         <Link to={"/"}>Easy Sender</Link>
                     </p>
                     <nav id={"nav_panel"}>
-                        <p><Link to={"/addTemplate"}>Add</Link></p>
-                        <p><Link to={"/useTemplate"}>Use</Link></p>
-                        <p><Link to={"/noTemplate"}>Send</Link></p>
+                        <p><Link to={"/addTemplate"}>ADD</Link></p>
+                        <p><Link to={"/useTemplate"}>USE</Link></p>
+                        <p><Link to={"/noTemplate"}>SEND</Link></p>
                     </nav>
                 </header>
         )
