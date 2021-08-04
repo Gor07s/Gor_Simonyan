@@ -55,9 +55,9 @@ If you just need to send an email without a template, then this is the tab for y
 
 This was a short description of this site.
 
-If you have questions:
-
 this was a short description of this site.
+
+If you have questions:
 
 [Github](https://github.com/Gor07s)
 
