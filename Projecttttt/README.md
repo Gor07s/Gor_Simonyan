@@ -9,7 +9,7 @@ Easy Sender is a site with which you can easily create a template and send lette
 ### Difference between regular templates and Easy Sender templates.
 
 Let's admit this case. You have created a congratulations template with a name and so on. Each time the template is used, the name will be static. and thus, if there are many such words, you will have to find and change them all manually.
-Easy Sender provides templates with dynamic words. that is, if the word changes with Kavdim sending, you can declare it dynamic, after which there is a field in which you just need to put the word, and it will automatically fall into place.
+Easy Sender provides templates with dynamic words. that is, if the word changes with every sending, you can declare it dynamic, after which there is a field in which you just need to put the word, and it will automatically fall into place.
 this is especially convenient for those who work a lot with the same type of templates.
 
 ### Work with Easy Sender.
