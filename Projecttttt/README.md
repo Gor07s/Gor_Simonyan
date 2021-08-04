@@ -34,7 +34,7 @@ Then press "add" and you're done!
 
 In this tab we will use, modify and delete templates.
 
-when you add a template, you can use it, delete or modify it. Just click on "my templates" on the left and all your templates will appear. click on one of them and a short description of this template will appear. and at the bottom there will be 3 buttons: use, modify and delete.
+When you add a template, you can use it, delete or modify it. Just click on "my templates" on the left and all your templates will appear. Click on one of them and a short description of this template will appear and at the bottom there will be 3 buttons: use, modify and delete.
 
 ###### Use
 
@@ -49,7 +49,7 @@ You can change the template you create.
 Just remove the template if you no longer need it.
 
 
-##### Send without template.
+###### Send without template.
 
 If you just need to send an email without a template, then this is the tab for you.
 
