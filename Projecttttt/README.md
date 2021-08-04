@@ -49,7 +49,7 @@ You can change the template you create.
 Just remove the template if you no longer need it.
 
 
-###### Send without template.
+### Send without template.
 
 If you just need to send an email without a template, then this is the tab for you.
 
