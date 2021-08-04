@@ -57,7 +57,6 @@ This was a short description of this site.
 
 If you have questions:
 
-github:
 this was a short description of this site.
 
 [Github](https://github.com/Gor07s)
