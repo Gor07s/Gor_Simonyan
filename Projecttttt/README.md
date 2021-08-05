@@ -30,7 +30,7 @@ Now the word "name" is dynamic, everything is very simple!
 
 Then press "add" and you're done!
 
-### Use Template
+##### Use Template
 
 In this tab we will use, modify and delete templates.
 
@@ -49,11 +49,18 @@ You can change the template you create.
 Just remove the template if you no longer need it.
 
 
-### Send without template.
+##### Send without template.
 
 If you just need to send an email without a template, then this is the tab for you.
 
 This was a short description of this site.
+
+### How to start?
+
+1. Instal npm
+2. Open frontend/backend and use "npm install" command
+3. Open backend and use "npm start" command
+4. Open frontend and use "npm start" command
 
 If you have questions:
 
