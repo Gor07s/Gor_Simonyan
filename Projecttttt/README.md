@@ -40,6 +40,8 @@ When you add a template, you can use it, delete or modify it. Just click on "my 
 
 Use a template, just fill in the fields.
 
+If you want to make a dynamic word individual for each recipient, then use the checkbox opposite. Then there will be as many fields as there are recipients.
+
 ###### Modify
 
 You can change the template you create.
