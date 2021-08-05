@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
+class Home extends Component {
 
-
-class Home extends Component{
-
-    render() {
+    render () {
         return (
             <div id={"gen_box"}>
                 <Link to="/addTemplate" id={"link"}>
@@ -18,9 +16,8 @@ class Home extends Component{
                     <button className={"gen_but"}>Send without template</button>
                 </Link>
             </div>
-        )
+        );
     }
 }
 
-
-export default Home
+export default Home;

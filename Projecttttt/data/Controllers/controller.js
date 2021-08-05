@@ -7,7 +7,7 @@ const sequelize = require('../models/index');
 const { getWords } = require('../Middlewares/middleware')
 const { sendMail } = require('../MailSender/sender')
 
-sequelize.sync({ force: true });
+sequelize.sync();
 
 const app = express();
 

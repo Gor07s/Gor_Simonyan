@@ -1,20 +1,20 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 import {Link} from "react-router-dom";
 
-class NoTemplate extends Component{
-    constructor(props) {
+class NoTemplate extends Component {
+    constructor (props) {
         super(props);
-        this.state={
+        this.state = {
             rId: 1
-        }
-        this.apiCall = this.apiCall.bind(this)
-        this.addRecipient = this.addRecipient.bind(this)
+        };
+        this.apiCall = this.apiCall.bind(this);
+        this.addRecipient = this.addRecipient.bind(this);
     }
 
-    async apiCall(){
-        let mail = []
+    async apiCall () {
+        let mail = [];
         for (let i = 1; i <= this.state.rId; i++) {
-            mail.push(document.getElementById("recipients" + i).value)
+            mail.push(document.getElementById("recipients" + i).value);
         }
         await fetch("/useTemplate/send", {
             method: 'POST',
@@ -27,43 +27,43 @@ class NoTemplate extends Component{
                 subject: document.getElementById("title").value,
                 from: document.getElementById("from").value
             })
-        })
+        });
     }
 
-    async addRecipient(){
-        const input = document.createElement("input")
-        const delButton = document.createElement("button")
-        const div = document.createElement("div")
-        await this.setState({rId : this.state.rId + 1})
-        div.style.display ="flex"
-        div.className = "addRecDiv"
-        input.id = "recipients" + this.state.rId
-        input.style.display = "flex"
-        input.className = "formInputRec"
-        delButton.className = "delButRec"
-        delButton.type = "button"
-        delButton.id = "del" + this.state.rId
-        delButton.innerHTML = "X"
+    async addRecipient () {
+        const input = document.createElement("input");
+        const delButton = document.createElement("button");
+        const div = document.createElement("div");
+        await this.setState({rId : this.state.rId + 1});
+        div.style.display = "flex";
+        div.className = "addRecDiv";
+        input.id = "recipients" + this.state.rId;
+        input.style.display = "flex";
+        input.className = "formInputRec";
+        delButton.className = "delButRec";
+        delButton.type = "button";
+        delButton.id = "del" + this.state.rId;
+        delButton.innerHTML = "X";
         delButton.onclick = () => {
-            input.parentNode.removeChild(input)
-            delButton.style.display = "none"
-        }
-        const bigDiv = document.getElementById("addRecBigDiv")
-        div.appendChild(input)
-        div.appendChild(delButton)
-        bigDiv.appendChild(div)
+            input.parentNode.removeChild(input);
+            delButton.style.display = "none";
+        };
+        const bigDiv = document.getElementById("addRecBigDiv");
+        div.appendChild(input);
+        div.appendChild(delButton);
+        bigDiv.appendChild(div);
     }
 
-    render() {
-        return(
+    render () {
+        return (
             <div style={{"width" : "100%"}}>
                 <Link to="/">
                     <button id={"back"}>Back</button>
                 </Link>
                 <div id={"addBox"}>
                     <form id={"addForm"} onSubmit={e => {
-                        e.preventDefault()
-                        //window.history.replaceState(null, '', "/")
+                        e.preventDefault();
+                        // window.history.replaceState(null, '', "/")
                     }}>
                         <div>
                             <label htmlFor="from" className={"form"}>from</label>
@@ -89,8 +89,8 @@ class NoTemplate extends Component{
                     </form>
                 </div>
             </div>
-        )
+        );
     }
 }
 
-export default NoTemplate
+export default NoTemplate;

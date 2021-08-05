@@ -7,17 +7,17 @@ import ModTemplate from "./Components/modTemplate";
 import Footer from "./Components/footer";
 import Header from "./Components/header";
 import Home from "./Components/home";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import {BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-class App extends Component{
+class App extends Component {
 
-    render() {
+    render () {
         return (
             <Router>
                 <div id={"general"}>
                     <Header/>
                     <Switch>
-                        <Route exact path={"/"}>
+                        <Route exact path={"/"} go>
                             <Home/>
                         </Route>
                         <Route exact path={"/addTemplate"}>
@@ -39,10 +39,9 @@ class App extends Component{
                     <Footer/>
                 </div>
             </Router>
-        )
+        );
     }
 
 }
-
 
 export default App;

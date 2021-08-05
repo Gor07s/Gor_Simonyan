@@ -1,108 +1,108 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-export let template = []
-export let recipients = []
-export let vars = []
-export let show = []
+export let template = [];
+export let recipients = [];
+export let vars = [];
+export let show = [];
 
-export class UseTemplate extends Component{
-    constructor(props) {
+export class UseTemplate extends Component {
+    constructor (props) {
         super(props);
-        this.state= {
+        this.state = {
             apiResponse: "",
             apiResponseTo: "",
             apiResponseVars: "",
             myTempIsClick: false,
             tempClicked: false,
-            currentTemp: {},
-        }
+            currentTemp: {}
+        };
 
-        this.myTemplates = this.myTemplates.bind(this)
-        this.showMyTemps = this.showMyTemps.bind(this)
-        this.templateOnClick = this.templateOnClick.bind(this)
-        this.UseTemplateFunc = this.UseTemplateFunc.bind(this)
-        this.DelTemplateFunc = this.DelTemplateFunc.bind(this)
+        this.myTemplates = this.myTemplates.bind(this);
+        this.showMyTemps = this.showMyTemps.bind(this);
+        this.templateOnClick = this.templateOnClick.bind(this);
+        this.UseTemplateFunc = this.UseTemplateFunc.bind(this);
+        this.DelTemplateFunc = this.DelTemplateFunc.bind(this);
     }
 
-    templateOnClick(id){
-        const template = this.state.apiResponse.filter(template => template.id == id)[0]
+    templateOnClick (id) {
+        const template = this.state.apiResponse.filter(template => template.id == id)[0];
         this.setState({currentTemp: template,
-                            tempClicked: true})
+            tempClicked: true});
     }
 
-    async myTemplates(){
-        const div = document.getElementById("forTemps")
+    async myTemplates () {
+        const div = document.getElementById("forTemps");
         await fetch("/useTemplate/templates", {
             method:'GET',
             headers: { 'Content-Type': 'application/json' }
         })
             .then(res => res.text())
-            .then(res => this.setState({apiResponse: JSON.parse(res)}))
+            .then(res => this.setState({apiResponse: JSON.parse(res)}));
         await fetch("/useTemplate/recipients", {
             method:'GET',
             headers: { 'Content-Type': 'application/json' }
         })
             .then(res => res.text())
-            .then(res => this.setState({apiResponseTo: JSON.parse(res)}))
+            .then(res => this.setState({apiResponseTo: JSON.parse(res)}));
         await fetch("/useTemplate/vars", {
             method:'GET',
             headers: { 'Content-Type': 'application/json' }
         })
             .then(res => res.text())
-            .then(res => this.setState({apiResponseVars: JSON.parse(res)}))
+            .then(res => this.setState({apiResponseVars: JSON.parse(res)}));
         this.state.apiResponse.forEach((template, index) => {
-            const ep = document.getElementById(index+1)
-            if(ep === null) {
-                const p = document.createElement("p")
-                p.id = index + 1
-                p.innerHTML = template.templateName
-                p.onclick = () => this.templateOnClick(template.id)
-                div.appendChild(p)
+            const ep = document.getElementById(index + 1);
+            if (ep === null) {
+                const p = document.createElement("p");
+                p.id = index + 1;
+                p.innerHTML = template.templateName;
+                p.onclick = () => this.templateOnClick(template.id);
+                div.appendChild(p);
             }
-        })
+        });
     }
 
-    showMyTemps(){
-        this.myTemplates()
-        const temp = document.getElementById("forTemps")
-        if(this.state.myTempIsClick){
-            temp.style.display = "none"
+    showMyTemps () {
+        this.myTemplates();
+        const temp = document.getElementById("forTemps");
+        if (this.state.myTempIsClick) {
+            temp.style.display = "none";
         }
         else {
-            temp.style.display = "block"
+            temp.style.display = "block";
         }
         this.setState({myTempIsClick: !this.state.myTempIsClick,
-                            tempClicked: false,
-                            currentTemp: null})
+            tempClicked: false,
+            currentTemp: null});
     }
 
-    UseTemplateFunc(){
-        template.splice(0, template.length)
-        vars.splice(0, vars.length)
-        recipients.splice(0, recipients.length)
-        template.push(this.state.currentTemp)
-        this.state.apiResponseTo.filter(temp => temp.tableId == this.state.currentTemp.id).forEach(element => recipients.push(element.email))
-        this.state.apiResponseVars.filter(temp => temp.tableId == this.state.currentTemp.id).forEach(element => vars.push(element))
-        show.push(true)
+    UseTemplateFunc () {
+        template.splice(0, template.length);
+        vars.splice(0, vars.length);
+        recipients.splice(0, recipients.length);
+        template.push(this.state.currentTemp);
+        this.state.apiResponseTo.filter(temp => temp.tableId == this.state.currentTemp.id).forEach(element => recipients.push(element.email));
+        this.state.apiResponseVars.filter(temp => temp.tableId == this.state.currentTemp.id).forEach(element => vars.push(element));
+        show.push(true);
     }
 
-    async DelTemplateFunc(){
+    async DelTemplateFunc () {
         await fetch("/useTemplate/delete", {
             method: 'DELETE',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 id: this.state.currentTemp.id
             })
-        })
-        for (let i = 1; i <= this.state.apiResponse.length; i++){
-            const p = document.getElementById(i)
-            p.parentNode.removeChild(p)
+        });
+        for (let i = 1; i <= this.state.apiResponse.length; i++) {
+            const p = document.getElementById(i);
+            p.parentNode.removeChild(p);
         }
-        await this.showMyTemps()
+        await this.showMyTemps();
     }
 
-    render() {
+    render () {
         return (
             <div style={{"width" : "100%"}}>
                 <Link to="/">
@@ -138,6 +138,6 @@ export class UseTemplate extends Component{
                     </span>}
                 </div>
             </div>
-        )
+        );
     }
 }
