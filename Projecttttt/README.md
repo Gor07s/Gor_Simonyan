@@ -64,6 +64,13 @@ This was a short description of this site.
 3. Open backend and use "npm start" command
 4. Open frontend and use "npm start" command
 
+### What do you need to work?
+
+1. You need a google account, because the submission is done through google account!
+2. npm v^7
+3. node v^14
+4. react v^17
+
 If you have questions:
 
 [Github](https://github.com/Gor07s)
