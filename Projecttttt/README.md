@@ -59,7 +59,7 @@ This was a short description of this site.
 
 ### How to start?
 
-1. Instal npm
+1. Install npm
 2. Open frontend/backend and use "npm install" command
 3. Open backend and use "npm start" command
 4. Open frontend and use "npm start" command
