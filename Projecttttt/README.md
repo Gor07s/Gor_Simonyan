@@ -22,7 +22,7 @@ There are 3 main tabs on the site:
 
 ##### Add Template
 
-The templates themselves are added here. just fill in a couple of fields. and in the Text field where a dynamic word is needed, just write this word in brackets {_}:
+The templates themselves are added here. Just fill in a couple of fields and in the Text field where a dynamic word is needed, just write this word in brackets {_}:
 
 Example: Hello {name}!
 
@@ -63,6 +63,10 @@ This was a short description of this site.
 2. Open frontend/backend and use "npm install" command
 3. Open backend and use "npm start" command
 4. Open frontend and use "npm start" command
+
+#### For more information
+
+[FSD]{https://docs.google.com/document/d/17-qU2H-vy0HHV-_GoBtKdJmoCLXYTz0aWfZTd6LMcfE/edit?usp=sharing}
 
 ### What do you need to work?
 
