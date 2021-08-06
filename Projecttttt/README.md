@@ -66,7 +66,7 @@ This was a short description of this site.
 
 #### For more information
 
-[FSD]{https://docs.google.com/document/d/17-qU2H-vy0HHV-_GoBtKdJmoCLXYTz0aWfZTd6LMcfE/edit?usp=sharing}
+[FSD](https://docs.google.com/document/d/17-qU2H-vy0HHV-_GoBtKdJmoCLXYTz0aWfZTd6LMcfE/edit?usp=sharing)
 
 ### What do you need to work?
 
